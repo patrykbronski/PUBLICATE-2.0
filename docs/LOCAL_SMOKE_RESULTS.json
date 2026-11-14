@@ -1,0 +1,121 @@
+{
+  "kind": "LOCAL_ONLY_NOT_SOCIAL_API",
+  "checks": [
+    {
+      "name": "health",
+      "result": "PASSED"
+    },
+    {
+      "name": "private data requires session",
+      "result": "PASSED"
+    },
+    {
+      "name": "CSRF custom header required",
+      "result": "PASSED"
+    },
+    {
+      "name": "foreign Origin rejected",
+      "result": "PASSED"
+    },
+    {
+      "name": "OAuth callback requires PUBLICATE session",
+      "result": "PASSED"
+    },
+    {
+      "name": "register PUBLICATE account",
+      "result": "PASSED"
+    },
+    {
+      "name": "PostgreSQL migrations applied",
+      "result": "PASSED"
+    },
+    {
+      "name": "five adapters and disabled AI",
+      "result": "PASSED"
+    },
+    {
+      "name": "foreign or missing post inaccessible",
+      "result": "PASSED"
+    },
+    {
+      "name": "JPEG upload and dimensions",
+      "result": "PASSED"
+    },
+    {
+      "name": "private image not publicly exposed",
+      "result": "PASSED"
+    },
+    {
+      "name": "authenticated preview",
+      "result": "PASSED"
+    },
+    {
+      "name": "MP4 upload and duration",
+      "result": "PASSED"
+    },
+    {
+      "name": "renamed text file rejected",
+      "result": "PASSED"
+    },
+    {
+      "name": "save and update real database draft",
+      "result": "PASSED"
+    },
+    {
+      "name": "paid AI blocked without configuration",
+      "result": "PASSED"
+    },
+    {
+      "name": "second PUBLICATE account",
+      "result": "PASSED"
+    },
+    {
+      "name": "second account cannot read first draft",
+      "result": "PASSED"
+    },
+    {
+      "name": "second account cannot change first draft",
+      "result": "PASSED"
+    },
+    {
+      "name": "second account cannot preview private media",
+      "result": "PASSED"
+    },
+    {
+      "name": "second account cannot reference private media",
+      "result": "PASSED"
+    },
+    {
+      "name": "logout removes session",
+      "result": "PASSED"
+    },
+    {
+      "name": "legacy key cannot authenticate",
+      "result": "PASSED"
+    },
+    {
+      "name": "dashboard renders all five platforms",
+      "result": "PASSED"
+    },
+    {
+      "name": "tester guards target selection",
+      "result": "PASSED"
+    },
+    {
+      "name": "responsive layout has no horizontal overflow",
+      "result": "PASSED"
+    },
+    {
+      "name": "registration through browser",
+      "result": "PASSED"
+    },
+    {
+      "name": "no browser runtime errors",
+      "result": "PASSED"
+    },
+    {
+      "name": "no real publication jobs created",
+      "result": "PASSED"
+    }
+  ]
+}

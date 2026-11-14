@@ -1,0 +1,68 @@
+const instance=require('../instance.json');
+// Local-only acceptance test. Never calls a social provider or publication endpoint.
+const {chromium,request}=require('../.tools/browser/node_modules/playwright');
+const fs=require('node:fs');const path=require('node:path');const assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..');
+const crypto=require('node:crypto');
+const credentials={email:'smoke-'+crypto.randomUUID()+'@example.test',password:crypto.randomBytes(24).toString('base64')};
+const checks=[];
+async function check(name,fn){await fn();checks.push({name,result:'PASSED'});console.log('PASS '+name);}
+(async()=>{
+ const anon=await request.newContext({baseURL:`http://localhost:${instance.backendPort}`});
+ await check('health',async()=>assert.equal((await anon.get('/api/health')).status(),200));
+ await check('private data requires session',async()=>assert.equal((await anon.get('/api/posts')).status(),401));
+ await check('CSRF custom header required',async()=>assert.equal((await anon.post('/api/session',{data:{key:'invalid'}})).status(),403));
+ await check('foreign Origin rejected',async()=>assert.equal((await anon.post('/api/session',{headers:{'X-Publicate':'1',Origin:'https://evil.example'},data:{key:'invalid'}})).status(),403));
+ await check('OAuth callback without session returns to login UI',async()=>{const r=await anon.get('/api/oauth/LinkedIn/callback?state=invalid&code=invalid',{maxRedirects:0});assert.equal(r.status(),302);assert.ok(r.headers().location.endsWith('#oauth=session_required'));});
+ const api=await request.newContext({baseURL:`http://localhost:${instance.backendPort}`,extraHTTPHeaders:{'X-Publicate':'1'}});
+ await check('register PUBLICATE account',async()=>assert.equal((await api.post('/api/register',{data:{name:'Smoke tester',...credentials}})).status(),200));
+ await check('PostgreSQL migrations applied',async()=>{const r=await api.get('/api/readiness');assert.equal(r.status(),200);const data=await r.json();assert.equal(data.database,true);assert.deepEqual(data.pendingMigrations,[]);});
+ await check('five adapters and disabled AI',async()=>{const data=await(await api.get('/api/platforms')).json();assert.equal(data.platforms.length,5);assert.equal(data.aiAvailable,false);});
+ await check('foreign or missing post inaccessible',async()=>assert.equal((await api.put('/api/posts/11111111-1111-1111-1111-111111111111',{data:{description:'x',cta:'',mediaIds:[]}})).status(),404));
+ let image;let draft;
+ await check('JPEG upload and dimensions',async()=>{const r=await api.post('/api/media',{multipart:{file:{name:'test.jpg',mimeType:'image/jpeg',buffer:fs.readFileSync(path.join(root,'.data/test-fixtures/test.jpg'))}}});assert.equal(r.status(),200,await r.text());image=await r.json();assert.equal(image.width,1080);assert.equal(image.height,1080);assert.equal(image.contentType,'image/jpeg');});
+ await check('private image not publicly exposed',async()=>assert.equal((await anon.get('/media/'+image.key)).status(),404));
+ await check('authenticated preview',async()=>assert.equal((await api.get('/api/media/'+image.id+'/preview')).status(),200));
+ await check('MP4 upload and duration',async()=>{const r=await api.post('/api/media',{multipart:{file:{name:'test.mp4',mimeType:'video/mp4',buffer:fs.readFileSync(path.join(root,'.data/test-fixtures/test.mp4'))}}});assert.equal(r.status(),200,await r.text());const m=await r.json();assert.equal(m.codec,'h264');assert.ok(m.duration>=3);});
+ await check('renamed text file rejected',async()=>{const r=await api.post('/api/media',{multipart:{file:{name:'not-image.jpg',mimeType:'image/jpeg',buffer:Buffer.from('This is not an image file')}}});assert.equal(r.status(),400);});
+ await check('save and update real database draft',async()=>{let r=await api.post('/api/posts',{data:{description:'TEST LOKALNY — bez publikacji',cta:'',mediaIds:[image.id]}});assert.equal(r.status(),200);const p=await r.json();draft=p;r=await api.put('/api/posts/'+p.id,{data:{description:'TEST LOKALNY — zapis PostgreSQL sprawdzony',cta:'Nie publikowano',mediaIds:[image.id]}});assert.equal(r.status(),200);});
+ await check('paid AI blocked without configuration',async()=>assert.equal((await api.post('/api/ai/description',{data:{mediaIds:[image.id],platform:'LinkedIn',confirmCost:true}})).status(),400));
+
+ const other=await request.newContext({baseURL:`http://localhost:${instance.backendPort}`,extraHTTPHeaders:{'X-Publicate':'1'}});
+ await check('second PUBLICATE account',async()=>assert.equal((await other.post('/api/register',{data:{name:'Other tester',email:'other-'+crypto.randomUUID()+'@example.test',password:credentials.password}})).status(),200));
+ await check('second account cannot read first draft',async()=>assert.deepEqual(await(await other.get('/api/posts')).json(),[]));
+ await check('second account cannot change first draft',async()=>assert.equal((await other.put('/api/posts/'+draft.id,{data:{description:'attack',cta:'',mediaIds:[]}})).status(),404));
+ await check('second account cannot preview private media',async()=>assert.equal((await other.get('/api/media/'+image.id+'/preview')).status(),404));
+ await check('second account cannot reference private media',async()=>assert.equal((await other.post('/api/posts',{data:{description:'attack',cta:'',mediaIds:[image.id]}})).status(),400));
+ await check('logout removes session',async()=>{assert.equal((await other.delete('/api/session')).status(),200);assert.equal((await other.get('/api/session')).status(),401);});
+ await check('legacy key cannot authenticate',async()=>assert.equal((await other.post('/api/session',{data:{key:'old-key'}})).status(),401));
+ await other.dispose();
+  const browser=await chromium.launch({headless:true});const page=await browser.newPage({viewport:{width:1440,height:1050}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(`http://localhost:${instance.frontendPort}`);await page.getByLabel('E-mail',{exact:true}).fill(credentials.email);await page.getByLabel('Hasło',{exact:true}).fill(credentials.password);await page.getByRole('button',{name:'Zaloguj się →',exact:true}).click();await page.getByRole('heading',{name:'Twoje platformy'}).waitFor();
+ await check('dashboard renders all five platforms',async()=>{for(const name of ['LinkedIn','Facebook','Instagram','TikTok','X'])await page.getByRole('heading',{name,exact:true}).waitFor();});
+ await page.screenshot({path:path.join(root,'docs/screenshots/dashboard.png'),fullPage:true});
+ await page.getByRole('button',{name:'Social API Tester',exact:false}).click();await page.getByRole('heading',{name:'Nowy test publikacji'}).waitFor();
+ await check('tester guards target selection',async()=>{await page.getByRole('button',{name:'Sprawdź walidację'}).click();await page.getByRole('alert').filter({hasText:'Wybierz miejsce publikacji'}).waitFor();});
+ await page.screenshot({path:path.join(root,'docs/screenshots/tester.png'),fullPage:true});
+ await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Połączone konta',exact:true}).click();
+ await check('responsive layout has no horizontal overflow',async()=>assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true));
+ await page.screenshot({path:path.join(root,'docs/screenshots/mobile.png'),fullPage:true});
+ await page.getByRole('button',{name:'Wyloguj',exact:true}).click();
+ await page.getByRole('button',{name:'Załóż konto',exact:true}).waitFor();
+ await page.setViewportSize({width:1440,height:1050});
+ await page.screenshot({path:path.join(root,'docs/screenshots/login.png'),fullPage:true});
+ await check('registration through browser',async()=>{
+ await page.getByRole('button',{name:'Załóż konto',exact:true}).click();
+ await page.getByLabel('Twoje imię',{exact:true}).fill('Test rejestracji');
+ await page.getByLabel('E-mail',{exact:true}).fill('browser-'+crypto.randomUUID()+'@example.test');
+ await page.getByLabel('Hasło',{exact:true}).fill(credentials.password);
+ await page.getByRole('button',{name:'Utwórz konto →',exact:true}).click();
+ await page.getByRole('heading',{name:'Twoje platformy'}).waitFor();
+ await page.getByRole('button',{name:'Moje konto',exact:false}).click();
+ await page.getByRole('heading',{name:'Test rejestracji',exact:true}).waitFor();
+ });
+ await check('no browser runtime errors',async()=>assert.deepEqual(errors,[]));
+ await check('no real publication jobs created',async()=>assert.deepEqual(await(await api.get('/api/jobs')).json(),[]));
+ await browser.close();await api.dispose();await anon.dispose();
+ fs.writeFileSync(path.join(root,'docs/LOCAL_SMOKE_RESULTS.json'),JSON.stringify({kind:'LOCAL_ONLY_NOT_SOCIAL_API',checks},null,2));
+})().catch(e=>{console.error(e.message);process.exit(1);});

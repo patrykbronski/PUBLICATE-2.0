@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/Publicate.Api/Publicate.Api.csproj" />
+  <Project Path="tests/Publicate.Tests/Publicate.Tests.csproj" />
+</Solution>

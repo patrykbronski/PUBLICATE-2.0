@@ -1,0 +1,10 @@
+{
+    "name":  "PUBLICATE 2.0",
+    "label":  "2.0",
+    "backendPort":  5081,
+    "frontendPort":  5174,
+    "databasePort":  55433,
+    "otherBackendPort":  5080,
+    "otherFrontendPort":  5173,
+    "publicUrl":  "https://cofounder-morse-reflex.ngrok-free.dev"
+}
