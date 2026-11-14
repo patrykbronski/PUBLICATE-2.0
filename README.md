@@ -4,7 +4,7 @@ Lokalny PoC publikacji przez oficjalne API: Facebook Pages, Instagram, TikTok, Y
 
 Stan 14.11.2026: użytkownik potwierdził rzeczywiste publikacje na wszystkich sześciu platformach w różnych testach; 12.11 film trafił na pięć platform jednym zatwierdzeniem. Nie oznacza to przetestowania wszystkich formatów i scenariuszy. [Wyniki](docs/TEST_RESULTS.md).
 
-Ta wersja służy dalszemu rozwojowi aplikacji. Wersja inżynierska jest osobno w PROTOTYP PUBLICATE. [Kontekst Codexa](PROJECT_CONTEXT.md), [zasady](AGENTS.md), [architektura](docs/ARCHITECTURE.md), [rozdzielenie projektów](docs/WORKSPACES.md).
+Ta wersja służy dalszemu rozwojowi aplikacji. Wersja inżynierska jest osobno w INZYNIERKA PUBLICATE. [Kontekst Codexa](PROJECT_CONTEXT.md), [zasady](AGENTS.md), [architektura](docs/ARCHITECTURE.md), [rozdzielenie projektów](docs/WORKSPACES.md).
 
 ## Obecny komputer Windows
 

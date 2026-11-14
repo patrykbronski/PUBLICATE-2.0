@@ -1,7 +1,7 @@
 # PUBLICATE — kontekst dla kolejnego Codexa
 
 Stan: **14.11.2026**. Ten folder to **PUBLICATE 2.0 — wersja rozwojowa**. Repozytorium: `patrykbronski/PUBLICATE-2.0`.
-Osobna wersja inżynierska: `C:\Dev\Projects\PROTOTYP PUBLICATE`, repo `patrykbronski/INZYNIERKA-PUBLICATE`.
+Osobna wersja inżynierska: `C:\Dev\Projects\INZYNIERKA PUBLICATE`, repo `patrykbronski/INZYNIERKA-PUBLICATE`.
 Zakres tej wersji: dalszy rozwój aplikacji na polecenie użytkownika; nie modyfikuj przy okazji inżynierki. Backlog nie jest zgodą na wdrożenie. Podział nie usuwa AI/R2/testera ani innych istniejących modułów; czyszczenie będzie osobnym zadaniem.
 
 ## Lektura i wiarygodność
@@ -75,3 +75,5 @@ Przed podziałem: 256/256 backend (atrapy), build i UI kreatora/YouTube/TikTok/X
 Zwykłe testy nie publikują. Skrypty live/database czytaj przed użyciem. Backlog `DO_WDROZENIA_W_PRZYSZLOSCI.md`: m.in. zmiana celu raz/7 dni, kontrola kosztów X, konwersja `?`. Nie implementuj przy okazji.
 
 **Weryfikacja podziału 14.11:** oba środowiska uruchomiono kolejno, health/baza/tunel poprawne, blokada równoczesnego startu działa. 256 testów backendu, build obu frontendów, UI kreatora/historii obu wersji PASSED z atrapami. Nowa baza 7 migracji i brak danych użytkownika. Bez nowych publikacji/OAuth. Szczegóły TEST_RESULTS.
+
+**Zmiana lokalizacji 14.11.2026:** obecny czat/workspace PROTOTYP PUBLICATE rozwija 2.0 (repo PUBLICATE-2.0, baza 55433). Inżynierka z dotychczasowymi danymi jest w INZYNIERKA PUBLICATE (repo INZYNIERKA-PUBLICATE, baza 55432). Przeniesiono całe repozytoria i katalogi danych, bez resetu kont/tokenów. Historyczne ścieżki w docs/archive opisują stan sprzed przeniesienia. Nie uruchamiaj starych jednorazowych pomocników z .tools — mogą zawierać stare ścieżki.

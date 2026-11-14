@@ -4,7 +4,7 @@ Ustalenie 14.11.2026: inżynierka dopracowywana w obecnym zakresie, nowe funkcje
 
 | Zasób | Inżynierka | Rozwój |
 |---|---|---|
-| Folder | `C:\Dev\Projects\PROTOTYP PUBLICATE` | `C:\Dev\Projects\PUBLICATE 2.0` |
+| Folder | `C:\Dev\Projects\INZYNIERKA PUBLICATE` | `C:\Dev\Projects\PROTOTYP PUBLICATE` |
 | Repo | `patrykbronski/INZYNIERKA-PUBLICATE` | `patrykbronski/PUBLICATE-2.0` |
 | Backend / Vite | 5080 / 5173 | 5081 / 5174 |
 | PostgreSQL | 55432, istniejący klaster | 55433, nowy klaster, baza publicate2 |

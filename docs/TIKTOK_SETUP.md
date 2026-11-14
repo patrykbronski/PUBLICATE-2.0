@@ -17,7 +17,7 @@ Użytkownik uzupełnił klucze Sandbox. Lokalnie potwierdzono obecność Client 
 
 Konfiguracja na przyszłość:
 ```powershell
-cd "C:\Dev\Projects\PROTOTYP PUBLICATE"
+cd "C:\Dev\Projects\INZYNIERKA PUBLICATE"
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Configure-TikTok.ps1
 ```
 Klucze muszą pochodzić z tego samego Sandboxa. Skrypt nie wywołuje API. Po zmianie restart backendu pod oryginalnym kontem Windows.

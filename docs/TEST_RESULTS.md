@@ -1,5 +1,9 @@
 # Wyniki testów PUBLICATE
 
+## 14.11.2026 — zamiana lokalizacji po podziale
+
+PUBLICATE 2.0 przeniesiono do `C:\Dev\Projects\PROTOTYP PUBLICATE`, a inżynierkę do `C:\Dev\Projects\INZYNIERKA PUBLICATE`, razem z właściwymi repozytoriami, bazami i katalogami kluczy. Przed przeniesieniem PostgreSQL zatrzymano poprawnie; nie resetowano baz ani tokenów. Poprawiono lokalne ścieżki ffprobe i dokumentację. Start obu środowisk kolejno PASSED: backend HTTP 200, pg_isready, właściwy frontend i tunel ngrok. Po kontroli zatrzymano procesy HTTP/tunelu; PostgreSQL pozostają uruchomione. Nie wykonywano nowych publikacji, OAuth ani pełnego zestawu testów jednostkowych (kod aplikacji bez zmian).
+
 ## 14.11.2026 — rozdzielenie inżynierki i PUBLICATE 2.0
 
 PASSED lokalnie: 256/256 testów backendu; build obu frontendów i backendu 2.0; testy kreatora/historii z przechwyconym API w obu folderach. Uruchomiono kolejno oba launchery: health HTTP 200, pg_isready, tunel skierowany do właściwego Vite. Start 2.0 przy działającej inżynierce poprawnie zablokowany. Test skryptów sprawdza parser PowerShell, konflikt portu i normalizację historycznie zagnieżdżonego pliku PID. Naprawiono odczyt starego stanu launchera, dzięki czemu stop działa bez błędu null StartTime.

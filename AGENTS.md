@@ -22,7 +22,7 @@ Przeczytaj najpierw [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md), następnie dokumen
 
 ## Lokalne środowisko Windows
 
-- Ten workspace to PUBLICATE 2.0. Osobna inżynierka: `C:\Dev\Projects\PROTOTYP PUBLICATE`. Sprawdź `instance.json` i `docs/WORKSPACES.md`; nie edytuj drugiego repo bez polecenia. Nowy czat ma pracować w wybranym folderze.
+- Ten workspace to PUBLICATE 2.0. Osobna inżynierka: `C:\Dev\Projects\INZYNIERKA PUBLICATE`. Sprawdź `instance.json` i `docs/WORKSPACES.md`; nie edytuj drugiego repo bez polecenia. Nowy czat ma pracować w wybranym folderze.
 - Projekty działają naprzemiennie na jednej domenie ngrok. Porty bierz z `instance.json`; nie przywracaj sztywnego 5080/5173 w kopii 2.0. Przed przełączeniem dokończ OAuth i pobieranie/przetwarzanie mediów. Cookie i klucze Data Protection obu wersji są osobne.
 
 - Główny start: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Start-Publicate.ps1 -NoBrowser`. Uruchamia bazę, backend, frontend i ngrok, zachowując istniejące procesy. Bez `-NoBrowser` otwiera stronę.
